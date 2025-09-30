@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+
+  <!-- ===== Smalltalk & Help ===== -->
+  <category>
+    <pattern>HELLO</pattern>
+    <template>
+      Hi! I'm your CS Career Advisor bot. Type START to take a quick quiz, or ask: TELL ME ABOUT SOFTWARE ENGINEER.
+    </template>
+  </category>
+  <category>
+    <pattern>HI</pattern>
+    <template><srai>HELLO</srai></template>
+  </category>
+  <category>
+    <pattern>HELP</pattern>
+    <template>
+      Try START to take the quiz, or ask about a role:
+      TELL ME ABOUT SOFTWARE ENGINEER, DATA SCIENTIST, MACHINE LEARNING ENGINEER, CYBERSECURITY ANALYST, or CLOUD DEVOPS ENGINEER.
+    </template>
+  </category>
+
+  <!-- ===== A/B Binary Tree Quiz ===== -->
+  <category>
+    <pattern>START</pattern>
+    <template>
+      Let's find your CS role. You'll answer a few quick questions.
+
+      Which statement fits you best?
+      A) I love building software features.
+      B) I prefer analytical, security, or data work.
+
+      Reply with A or B.
+      <think>
+        <set name="q">Q1</set>
+        <set name="career">unknown</set>
+      </think>
+    </template>
+  </category>
+
+  <!-- Answer A -->
+  <category>
+    <pattern>A</pattern>
+    <template>
+      <condition name="q">
+        <!-- Q1 -> Q2A -->
+        <li value="Q1">
+          <think><set name="q">Q2A</set></think>
+          Which type of work sounds more appealing?
+          A) Automating infrastructure, CI/CD, and cloud deployments.
+          B) Designing and coding product features or APIs.
+
+          Reply with A or B.
+        </li>
+
+        <!-- Q2A -> Cloud/DevOps  -->
+        <li value="Q2A">
+          Recommendation: Cloud/DevOps Engineer.
+          <srai>TELL ME ABOUT CLOUD DEVOPS ENGINEER</srai>
+          <srai>COURSES FOR CLOUD DEVOPS ENGINEER</srai>
+          Type NEXT STEPS for an action plan.
+        </li>
+
+        <!-- Q3 -> Cybersecurity (B branch then A at Q3) -->
+        <li value="Q3">
+          Recommendation: Cybersecurity Analyst.
+          <srai>TELL ME ABOUT CYBERSECURITY ANALYST</srai>
+          <srai>COURSES FOR CYBERSECURITY ANALYST</srai>
+          Type NEXT STEPS for an action plan.
+        </li>
+      </condition>
+    </template>
+  </category>
+
+  <!-- Answer B -->
+  <category>
+    <pattern>B</pattern>
+    <template>
+      <condition name="q">
+        <!-- Q1 -> Q2B -->
+        <li value="Q1">
+          <think><set name="q">Q2B</set></think>
+          Which area are you more likely to enjoy?
+          A) Data, statistics, experiments, dashboards.
+          B) Systems or AI modeling (not mainly data analysis).
+
+          Reply with A or B.
+        </li>
+
+        <!-- Q2B -> Q3 -->
+        <li value="Q2B">
+          <think><set name="q">Q3</set></think>
+          Which excites you more?
+          A) Cybersecurity: defense, detections, incident response.
+          B) Machine Learning: building, training, deploying models.
+
+          Reply with A or B.
+        </li>
+
+        <!-- Q2A -> Software Engineer -->
+        <li value="Q2A">
+          Recommendation: Software Engineer.
+          <srai>TELL ME ABOUT SOFTWARE ENGINEER</srai>
+          <srai>COURSES FOR SOFTWARE ENGINEER</srai>
+          Type NEXT STEPS for an action plan.
+        </li>
+
+        <!-- Q3 -> ML Engineer -->
+        <li value="Q3">
+          Recommendation: Machine Learning Engineer.
+          <srai>TELL ME ABOUT MACHINE LEARNING ENGINEER</srai>
+          <srai>COURSES FOR MACHINE LEARNING ENGINEER</srai>
+          Type NEXT STEPS for an action plan.
+        </li>
+      </condition>
+    </template>
+  </category>
+
+  <!-- Gentle nudges if YES/NO typed during quiz -->
+  <category><pattern>YES</pattern><template>During the quiz, please answer with A or B.</template></category>
+  <category><pattern>NO</pattern><template>During the quiz, please answer with A or B.</template></category>
+
+ 
+  <!-- ===== Job Briefings ===== -->
+  <category>
+    <pattern>TELL ME ABOUT SOFTWARE ENGINEER</pattern>
+    <template>
+      Software Engineers design, build, test, and maintain software systems. Core skills: algorithms, OOP, version control, testing.
+      Courses: Data Structures, Algorithms, Software Engineering. Cert Paths: AWS Developer Associate.
+    </template>
+  </category>
+
+  <category>
+    <pattern>TELL ME ABOUT CLOUD DEVOPS ENGINEER</pattern>
+    <template>
+      Cloud/DevOps Engineers build infrastructure and automation for reliable delivery.
+      Skills: Linux, scripting, CI/CD, containers, IaC (Terraform), cloud.
+      Courses: Operating Systems, Cloud Computing, Software Engineering.
+      Cert Paths: AWS Solutions Architect or DevOps Engineer.
+    </template>
+  </category>
+
+  <category>
+    <pattern>TELL ME ABOUT DATA SCIENTIST</pattern>
+    <template>
+      Data Scientists analyze data to generate insights using statistics and ML.
+      Skills: Python/R, SQL, visualization, model evaluation.
+      Courses: Probability &amp; Stats, Data Mining, Databases.
+      Cert Paths: Google Data Analytics, AWS Data Analytics.
+    </template>
+  </category>
+
+  <category>
+    <pattern>TELL ME ABOUT CYBERSECURITY ANALYST</pattern>
+    <template>
+      Cybersecurity Analysts protect systems by monitoring, detecting, and responding to threats.
+      Skills: networking, Linux, SIEM, scripting.
+      Courses: Networking, Operating Systems, Security Fundamentals.
+      Cert Paths: Security+, CySA+, CASP+.
+    </template>
+  </category>
+
+  <category>
+    <pattern>TELL ME ABOUT MACHINE LEARNING ENGINEER</pattern>
+    <template>
+      ML Engineers build and deploy ML systems (pipelines, training, evaluation, serving).
+      Skills: Python, ML frameworks, feature engineering, MLOps, cloud.
+      Courses: ML Intro, Probability &amp; Stats.
+      Cert Paths: AWS ML Specialty.
+    </template>
+  </category>
+
+  <!-- ===== Reset & Debug ===== -->
+  <category>
+    <pattern>CLEAR</pattern>
+    <template>
+      Options are cleared. Type START to retake the quiz.
+      <think>
+        <set name="q">unknown</set>
+        <set name="career">unknown</set>
+      </think>
+    </template>
+  </category>
+
+  <category>
+    <pattern>STATE</pattern>
+    <template>q=<get name="q"/> | career=<get name="career"/></template>
+  </category>
+<!-- ===== Coursera course suggestions by role ===== -->
+
+<category>
+  <pattern>COURSES FOR SOFTWARE ENGINEER</pattern>
+  <template>
+    Suggested courses:
+    • Algorithms, Part I (Princeton) — <a href="https://www.coursera.org/learn/algorithms-part1">coursera.org/learn/algorithms-part1</a><br/>
+    • Software Design &amp; Architecture Specialization (U. Alberta) — <a href="https://www.coursera.org/specializations/software-design-architecture">coursera.org/specializations/software-design-architecture</a><br/>
+    • Version Control with Git (Atlassian) — <a href="https://www.coursera.org/learn/version-control-with-git">coursera.org/learn/version-control-with-git</a>
+  </template>
+</category>
+
+<category>
+  <pattern>COURSES FOR CLOUD DEVOPS ENGINEER</pattern>
+  <template>
+    Suggested courses:
+    • AWS Cloud Practitioner Essentials — <a href="https://www.coursera.org/learn/aws-cloud-practitioner-essentials">coursera.org/learn/aws-cloud-practitioner-essentials</a><br/>
+    • Site Reliability Engineering &amp; DevOps (Google Cloud) — <a href="https://www.coursera.org/specializations/site-reliability-engineering">coursera.org/specializations/site-reliability-engineering</a><br/>
+    • Continuous Delivery &amp; DevOps (UVA Darden) — <a href="https://www.coursera.org/learn/uva-darden-devops">coursera.org/learn/uva-darden-devops</a>
+  </template>
+</category>
+
+<category>
+  <pattern>COURSES FOR DATA SCIENTIST</pattern>
+  <template>
+    Suggested courses:
+    • IBM Data Science Professional Certificate — <a href="https://www.coursera.org/professional-certificates/ibm-data-science">coursera.org/professional-certificates/ibm-data-science</a><br/>
+    • Applied Data Science with Python (U. Michigan) — <a href="https://www.coursera.org/specializations/data-science-python">coursera.org/specializations/data-science-python</a><br/>
+    • SQL for Data Science (UC Davis) — <a href="https://www.coursera.org/learn/sql-for-data-science">coursera.org/learn/sql-for-data-science</a>
+  </template>
+</category>
+
+<category>
+  <pattern>COURSES FOR CYBERSECURITY ANALYST</pattern>
+  <template>
+    Suggested courses:
+    • Google Cybersecurity Professional Certificate — <a href="https://www.coursera.org/professional-certificates/google-cybersecurity">coursera.org/professional-certificates/google-cybersecurity</a><br/>
+    • IBM Cybersecurity Analyst Professional Certificate — <a href="https://www.coursera.org/professional-certificates/ibm-cybersecurity-analyst">coursera.org/professional-certificates/ibm-cybersecurity-analyst</a><br/>
+    • Introduction to Cyber Security Specialization (NYU) — <a href="https://www.coursera.org/specializations/intro-cyber-security">coursera.org/specializations/intro-cyber-security</a>
+  </template>
+</category>
+
+<category>
+  <pattern>COURSES FOR MACHINE LEARNING ENGINEER</pattern>
+  <template>
+    Suggested courses:
+    • Machine Learning (Andrew Ng) — <a href="https://www.coursera.org/learn/machine-learning">coursera.org/learn/machine-learning</a><br/>
+    • Deep Learning Specialization (DeepLearning.AI) — <a href="https://www.coursera.org/specializations/deep-learning">coursera.org/specializations/deep-learning</a><br/>
+    • Machine Learning Engineering for Production (MLOps) — <a href="https://www.coursera.org/specializations/machine-learning-engineering-for-production-mlops">coursera.org/specializations/machine-learning-engineering-for-production-mlops</a>
+  </template>
+</category>
+
+  <!-- ===== Fallback  ===== -->
+  <category>
+    <pattern>*</pattern>
+    <template>
+      Sorry, I don't understand. Type START to take the quiz or HELP for options.
+    </template>
+  </category>
+
+</aiml>
